@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Assistente NFS-e — Duque de Caxias</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="tag">NFS-e • IBS/CBS • Duque de Caxias/RJ</div>
+    <h1>Coleta rápida de dados para parametrização</h1>
+    <p>O cliente informa o código municipal, o NBS e o local da prestação. O site confere as combinações nas tabelas carregadas e devolve os códigos necessários.</p>
+  </div>
+</header>
+
+<main class="wrap layout">
+  <section>
+    <div class="notice"><strong>Importante:</strong> o NBS deve ser informado pelo cliente. O site apenas valida se ele é compatível com o serviço escolhido.</div>
+
+    <article class="card">
+      <div class="step"><b>1</b><div><h2>Serviço municipal</h2><p>Selecione o código de serviço utilizado em Duque de Caxias. Você pode pesquisar pelo código municipal ou pelo código nacional.</p></div></div>
+      <label>Pesquisar
+        <input id="servSearch" type="search" placeholder="Ex.: 1401, 140101, manutenção, informática...">
+      </label>
+      <label>Código / serviço municipal
+        <select id="servMun"><option value="">Selecione...</option></select>
+      </label>
+      <div id="munInfo" class="box hidden"></div>
+
+      <label id="tribNacWrap" class="hidden">Tributação nacional correspondente
+        <select id="tribNac"></select>
+        <small>Quando houver mais de uma correspondência, selecione a descrição que representa o serviço efetivo.</small>
+      </label>
+    </article>
+
+    <article class="card">
+      <div class="step"><b>2</b><div><h2>NBS informado pelo cliente</h2><p>Digite exatamente o código NBS de 9 dígitos fornecido pelo cliente.</p></div></div>
+      <label>NBS
+        <input id="nbs" type="text" inputmode="numeric" maxlength="9" placeholder="Ex.: 120013110" disabled>
+      </label>
+      <div class="buttons">
+        <button id="validarNbs" class="primary" disabled>Validar NBS</button>
+        <button id="verNbs" disabled>Ver NBS compatíveis</button>
+      </div>
+      <div id="nbsStatus" class="status neutral">Aguardando o serviço municipal.</div>
+      <div id="nbsInfo" class="box hidden"></div>
+      <div id="nbsPermitidos" class="box hidden"></div>
+    </article>
+
+    <article class="card">
+      <div class="step"><b>3</b><div><h2>Classificação IBS/CBS</h2><p>Depois de validar o NBS, o site mostra somente as combinações permitidas pela correlação.</p></div></div>
+      <label>CST / cClassTrib
+        <select id="classe" disabled><option value="">Aguardando NBS válido...</option></select>
+      </label>
+      <div id="classeAviso" class="warning hidden">Há mais de uma classificação possível. O cliente/contador precisa confirmar qual situação tributária se aplica.</div>
+    </article>
+
+    <article class="card">
+      <div class="step"><b>4</b><div><h2>Onde / como o serviço foi realizado?</h2><p>Isso define o indicador da operação entre os códigos compatíveis com a combinação escolhida.</p></div></div>
+      <label>Indicador compatível
+        <select id="indOp" disabled><option value="">Aguardando classificação...</option></select>
+      </label>
+      <div id="indInfo" class="box hidden"></div>
+    </article>
+
+    <article class="card">
+      <div class="step"><b>5</b><div><h2>Município da prestação</h2><p>Informe onde o serviço foi efetivamente realizado.</p></div></div>
+      <label class="check"><input id="emCaxias" type="checkbox" checked> Serviço realizado em Duque de Caxias/RJ</label>
+      <div id="outraCidade" class="grid hidden">
+        <label>Município
+          <input id="cidade" type="text" placeholder="Ex.: Rio de Janeiro/RJ">
+        </label>
+        <label>Código IBGE
+          <input id="ibge" type="text" inputmode="numeric" maxlength="7" placeholder="7 dígitos">
+        </label>
+      </div>
+      <small>Duque de Caxias/RJ: código IBGE <strong>3301702</strong>.</small>
+    </article>
+
+    <article class="card">
+      <div class="step"><b>6</b><div><h2>Outras informações</h2><p>Preencha apenas o necessário para a sua ficha de apoio.</p></div></div>
+      <div class="grid">
+        <label>Simples Nacional
+          <select id="simples">
+            <option value="">Confirmar</option>
+            <option value="1">1 — Não optante</option>
+            <option value="2">2 — MEI</option>
+            <option value="3">3 — Simples Nacional ME/EPP</option>
+          </select>
+        </label>
+        <label>Retenção do ISSQN
+          <select id="retISS">
+            <option value="1">1 — Não retido</option>
+            <option value="2">2 — Retido pelo tomador</option>
+            <option value="3">3 — Retido pelo intermediário</option>
+          </select>
+        </label>
+        <label>Tomador = adquirente = destinatário?
+          <select id="indDest">
+            <option value="0">Sim — indDest 0</option>
+            <option value="1">Não — indDest 1</option>
+          </select>
+        </label>
+      </div>
+    </article>
+  </section>
+
+  <aside>
+    <article class="card sticky">
+      <div class="resultHead">
+        <div><div class="tag dark">Resultado</div><h2>Ficha final</h2></div>
+        <span id="badge" class="pill">Incompleta</span>
+      </div>
+
+      <div id="vazio" class="empty">Selecione o serviço para começar.</div>
+
+      <div id="resultado" class="hidden">
+        <dl>
+          <div><dt>cTribMun</dt><dd id="rMun">—</dd></div>
+          <div><dt>cTribNac</dt><dd id="rNac">—</dd></div>
+          <div><dt>NBS</dt><dd id="rNbs">—</dd></div>
+          <div><dt>CST</dt><dd id="rCst">—</dd></div>
+          <div><dt>cClassTrib</dt><dd id="rClass">—</dd></div>
+          <div><dt>cIndOp</dt><dd id="rInd">—</dd></div>
+          <div><dt>cLocPrestacao</dt><dd id="rLoc">3301702</dd></div>
+          <div><dt>finNFSe</dt><dd>0</dd></div>
+          <div><dt>opSimpNac</dt><dd id="rSimples">CONFIRMAR</dd></div>
+          <div><dt>tpRetISSQN</dt><dd id="rRet">1</dd></div>
+          <div><dt>indDest</dt><dd id="rDest">0</dd></div>
+        </dl>
+
+        <div id="validacao" class="status neutral">Aguardando os dados.</div>
+
+        <div class="buttons vertical">
+          <button id="copiar" class="primary">Copiar ficha</button>
+          <button id="baixar">Baixar TXT</button>
+          <button id="copiarXml">Copiar XML</button>
+          <button id="baixarXml">Baixar XML</button>
+        </div>
+        <small class="xml-note">O XML gerado contém o bloco de serviço + IBS/CBS com os códigos escolhidos. Como este formulário não pede CNPJ/CPF/IM/valores, ele não é uma DPS completa para transmissão.</small>
+      </div>
+    </article>
+  </aside>
+</main>
+
+<footer><div class="wrap">Ferramenta temporária. Não transmite NFS-e e não substitui validação fiscal quando houver mais de uma classificação possível.</div></footer>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
