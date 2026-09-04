@@ -1,13 +1,16 @@
-# Assistente NFS-e — Duque de Caxias + Rio de Janeiro (v7)
+# Assistente NFS-e — Padrão Nacional + ISSNet (v8)
 
-Correção importante para o Rio de Janeiro / Emissor Nacional:
+Esta versão remove a ideia de que a regra pertence ao "Rio de Janeiro" e passa a trabalhar por MODELO DE INTEGRAÇÃO:
 
-- A correlação cTribNac x NBS x CST/cClassTrib x cIndOp passa a ser tratada como ORIENTATIVA no Rio.
-- O site permite selecionar qualquer NBS existente na tabela nacional NBS.
-- A lista de NBS do Rio mostra todos os códigos nacionais e destaca os que aparecem como sugeridos na correlação.
-- CST/cClassTrib e cIndOp também podem ser escolhidos fora da correlação orientativa, desde que existam nas respectivas tabelas nacionais.
-- Para Duque de Caxias, a validação estrita pela correlação do provedor continua mantida.
-- O XML de apoio continua disponível.
+- Padrão Nacional — Emissor Nacional
+- Padrão Nacional — Provedor ISSNet
 
-Essa alteração foi feita após comparação com uma NFS-e autorizada pelo Emissor Nacional contendo:
-cTribNac 010701, cTribMun 001, NBS 115025000, CST 000, cClassTrib 000001 e cIndOp 050101.
+A lógica continua a mesma da v7:
+- No Emissor Nacional, NBS/CST/cClassTrib/cIndOp não ficam bloqueados pela correlação orientativa.
+- No ISSNet, permanece a validação mais amarrada pela correlação do provedor.
+- O município passa a ser um cadastro/configuração separado da regra de integração.
+- Para adicionar outro município ao Emissor Nacional, basta cadastrar/importar sua tabela municipal correspondente.
+- XML de apoio continua disponível.
+
+Observação:
+A tabela municipal atualmente incorporada no perfil Emissor Nacional é a planilha que foi fornecida para o Município do Rio de Janeiro. O nome da REGRA deixou de ser "Rio"; o município permanece como dado cadastral da tabela utilizada.
