@@ -1,25 +1,13 @@
-# Assistente NFS-e — Duque de Caxias/RJ (v3)
+# Assistente NFS-e — Duque de Caxias + Rio de Janeiro (v7)
 
-Fluxo desta versão:
+Correção importante para o Rio de Janeiro / Emissor Nacional:
 
-1. Cliente informa/seleciona o código do serviço municipal.
-2. Cliente informa o NBS de 9 dígitos.
-3. O site valida se o NBS é compatível com o cTribNac relacionado ao serviço municipal.
-4. O site mostra somente CST/cClassTrib compatíveis.
-5. O cliente informa onde/como o serviço ocorreu para escolher o cIndOp permitido.
-6. Informa-se o município da prestação.
+- A correlação cTribNac x NBS x CST/cClassTrib x cIndOp passa a ser tratada como ORIENTATIVA no Rio.
+- O site permite selecionar qualquer NBS existente na tabela nacional NBS.
+- A lista de NBS do Rio mostra todos os códigos nacionais e destaca os que aparecem como sugeridos na correlação.
+- CST/cClassTrib e cIndOp também podem ser escolhidos fora da correlação orientativa, desde que existam nas respectivas tabelas nacionais.
+- Para Duque de Caxias, a validação estrita pela correlação do provedor continua mantida.
+- O XML de apoio continua disponível.
 
-Não solicita CNPJ, CPF, razão social ou nome.
-
-## GitHub Pages
-Envie `index.html`, `styles.css`, `app.js` e `data.js` para a raiz do repositório.
-Depois habilite Settings > Pages > Deploy from a branch > main > /(root).
-
-O site é totalmente estático e não envia dados para servidor.
-
-- Correção v4: a pesquisa do serviço aceita tanto cTribMun quanto cTribNac.
-  Exemplo: pesquisar 140101 encontra o serviço municipal 1401 de Duque de Caxias.
-
-- v5: a lista "Ver NBS compatíveis" ficou clicável; clicar em uma linha preenche o NBS e valida automaticamente.
-- v5: adicionados "Copiar XML" e "Baixar XML" na ficha final.
-- O XML gerado é um bloco de parametrização com serviço + IBS/CBS; não é uma DPS completa, pois o formulário não solicita identificação/valores.
+Essa alteração foi feita após comparação com uma NFS-e autorizada pelo Emissor Nacional contendo:
+cTribNac 010701, cTribMun 001, NBS 115025000, CST 000, cClassTrib 000001 e cIndOp 050101.
