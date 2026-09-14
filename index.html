@@ -102,7 +102,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
           <option value="nao">Não — omitir IBS/CBS</option>
         </select>
       </label>
-      <small>No Rio de Janeiro, escolha se esta emissão levará o grupo IBS/CBS. Se marcar “Não”, o assistente oculta NBS, CST/cClassTrib, cIndOp e indDest e não gera o grupo &lt;IBSCBS&gt; no XML de apoio.</small>
+      <small>No Rio de Janeiro, escolha se esta emissão levará o grupo IBS/CBS. Se marcar “Não”, o NBS continua sendo informado normalmente; o assistente oculta somente CST/cClassTrib, cIndOp e indDest e não gera o grupo &lt;IBSCBS&gt; no XML de apoio.</small>
     </div>
   </article>
 
@@ -238,7 +238,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
         <button id="copiarXml">Copiar XML</button>
         <button id="baixarXml">Baixar XML</button>
       </div>
-      <small class="xml-note">O XML gerado é um bloco de parametrização com serviço + IBS/CBS; não é uma DPS completa para transmissão.</small>
+      <small class="xml-note">O XML gerado é um bloco de parametrização do serviço e, quando aplicável, do IBS/CBS; não é uma DPS completa para transmissão.</small>
     </div>
   </article>
 </aside>
@@ -304,14 +304,14 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
     const mostrarCampos=!isRio() || ativa;
 
     E.reformaWrap.classList.toggle('hidden',!isRio());
-    E.nbsCard.classList.toggle('hidden',!mostrarCampos);
+    E.nbsCard.classList.remove('hidden');
     E.classeCard.classList.toggle('hidden',!mostrarCampos);
     E.indOpCard.classList.toggle('hidden',!mostrarCampos);
     E.indDestWrap.classList.toggle('hidden',isRio() && !ativa);
 
     const compactar=isRio() && !ativa;
-    E.locStepNum.textContent=compactar?'3':'6';
-    E.otherStepNum.textContent=compactar?'4':'7';
+    E.locStepNum.textContent=compactar?'4':'6';
+    E.otherStepNum.textContent=compactar?'5':'7';
   }
 
   function serviceRows(){
@@ -367,7 +367,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
       E.modoInfo.innerHTML=
         '<strong>Padrão Nacional — Emissor Nacional:</strong> a tabela cadastrada traz o código completo '+
         '<code>cTribNac(6) + cTribMun(3)</code>. Ao selecionar o serviço, o site separa automaticamente os dois campos. '+
-        '<br><strong>IBS/CBS:</strong> informe abaixo se a emissão terá destaque das tags da Reforma Tributária. Quando a resposta for “Não”, o assistente trabalha somente com os dados necessários fora do grupo IBS/CBS. '+
+        '<br><strong>IBS/CBS:</strong> informe abaixo se a emissão terá destaque das tags da Reforma Tributária. O NBS permanece informado nos dois casos. Quando a resposta for “Não”, o assistente omite apenas os campos exclusivos do grupo IBS/CBS. '+
         '<br><strong>Atenção:</strong> quando houver IBS/CBS, a correlação NBS × cIndOp × cClassTrib é orientativa no Emissor Nacional e não é usada como regra de negócio.';
     }else{
       E.modoInfo.innerHTML=
@@ -493,7 +493,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
         `${esc(r.descricao)}`;
       E.munInfo.classList.remove('hidden');
 
-      if(reformaAtiva()) enableNbs();
+      enableNbs();
     }else{
       const rows=selectedDuqueRows();
       if(!rows.length){ update(); return; }
@@ -518,11 +518,6 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
   }
 
   function enableNbs(){
-    if(!reformaAtiva()){
-      resetDownstream();
-      update();
-      return;
-    }
     const hasNac=!!currentCTribNac();
     E.nbs.value='';
     E.nbs.disabled=!hasNac;
@@ -762,7 +757,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
       rioServiceCode:rio?.codServicoMunicipal||'',
       mun:currentCTribMun(),
       nac:currentCTribNac(),
-      nbs:reformaAtiva()?E.nbs.value.trim():'',
+      nbs:E.nbs.value.trim(),
       cst:reformaAtiva()?(cst||''):'',
       cl:reformaAtiva()?(cl||''):'',
       ind:reformaAtiva()?E.indOp.value:'',
@@ -781,7 +776,15 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
       return {s:'neutral',t:'Preencha o serviço municipal e o município da prestação.'};
     }
 
-    if(reformaAtiva() && (!c.nbs||!c.cst||!c.cl||!c.ind)){
+    if(!c.nbs){
+      return {s:'neutral',t:'Informe e valide o NBS do serviço.'};
+    }
+
+    if(isRio() && !Object.prototype.hasOwnProperty.call(D.nbs,c.nbs)){
+      return {s:'bad',t:'NBS não encontrado na tabela nacional carregada.'};
+    }
+
+    if(reformaAtiva() && (!c.cst||!c.cl||!c.ind)){
       return {s:'neutral',t:'Preencha os campos de IBS/CBS necessários.'};
     }
 
@@ -799,7 +802,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
     }
 
     if(isRio() && !reformaAtiva()){
-      return {s:'ok',t:'Parametrização válida para o Rio sem destaque de IBS/CBS. O grupo <IBSCBS> e os campos vinculados à Reforma Tributária serão omitidos.'};
+      return {s:'ok',t:'Parametrização válida para o Rio sem destaque de IBS/CBS. O NBS será mantido e o grupo <IBSCBS> com seus campos exclusivos será omitido.'};
     }
 
     if(isRio()){
@@ -867,7 +870,8 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
     const mostrarReforma=reformaAtiva();
     E.rReformaWrap.classList.toggle('hidden',c.municipioKey!=='rio');
     E.rReforma.textContent=c.reforma==='sim'?'Sim':c.reforma==='nao'?'Não':'—';
-    [E.rNbsWrap,E.rCstWrap,E.rClassWrap,E.rIndWrap,E.rFinWrap,E.rDestWrap].forEach(el=>
+    E.rNbsWrap.classList.remove('hidden');
+    [E.rCstWrap,E.rClassWrap,E.rIndWrap,E.rFinWrap,E.rDestWrap].forEach(el=>
       el.classList.toggle('hidden',!mostrarReforma)
     );
 
@@ -909,9 +913,10 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
       `Alíquota municipal: ${currentAliquota()}`
     );
 
+    lines.push(`NBS informado/selecionado: ${c.nbs}`);
+
     if(reformaAtiva()){
       lines.push(
-        `NBS informado/selecionado: ${c.nbs}`,
         `CST: ${c.cst}`,
         `cClassTrib: ${c.cl}`,
         `cIndOp: ${c.ind}`
@@ -952,9 +957,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
   function xmlBlock(){
     const c=codes();
     const row=corrNac().find(r=>r.cNBS===c.nbs)||{};
-    const desc=reformaAtiva()
-      ? (D.nbs[c.nbs]||row.xNBS||serviceDescription()||'SERVICO PRESTADO')
-      : (serviceDescription()||'SERVICO PRESTADO');
+    const desc=D.nbs[c.nbs]||row.xNBS||serviceDescription()||'SERVICO PRESTADO';
 
     const comment=c.municipioKey==='rio'
       ? `  Padrao Nacional direto: codigo completo ${c.fullCode}; codigo municipal antigo/referencia ${c.rioServiceCode}; IBS/CBS ${c.reforma==='sim'?'informado':'omitido'}.`
@@ -978,9 +981,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
       `      <xDescServ>${xmlEscape(desc)}</xDescServ>`
     ];
 
-    if(reformaAtiva()){
-      lines.push(`      <cNBS>${xmlEscape(c.nbs||'CNBS')}</cNBS>`);
-    }
+    lines.push(`      <cNBS>${xmlEscape(c.nbs||'CNBS')}</cNBS>`);
 
     lines.push(
       '    </cServ>',
@@ -1037,9 +1038,19 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
 
   E.municipio.addEventListener('change',onMunicipio);
   E.destacarReforma.addEventListener('change',()=>{
-    resetDownstream();
     applyReformaVisibility();
-    if(reformaAtiva() && currentCTribNac()) enableNbs();
+
+    // O NBS independe do destaque de IBS/CBS no Rio.
+    // Ao alternar Sim/Não, preservamos o NBS já informado e limpamos
+    // apenas os campos exclusivos da Reforma Tributária.
+    E.classe.disabled=true;
+    E.classe.innerHTML='<option value="">Aguardando NBS válido...</option>';
+    E.classeAviso.classList.add('hidden');
+    E.indOp.disabled=true;
+    E.indOp.innerHTML='<option value="">Aguardando classificação...</option>';
+    E.indInfo.classList.add('hidden');
+
+    if(reformaAtiva() && nbsValido()) renderClasses();
     update();
   });
   E.servSearch.addEventListener('input',()=>renderServices(E.servSearch.value));

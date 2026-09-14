@@ -1,20 +1,19 @@
-# Assistente NFS-e — Padrão Nacional + ISSNet (v10)
+# Assistente NFS-e — Padrão Nacional + ISSNet (v11)
 
 Versão pronta para publicação no GitHub Pages.
 
-## Alterações da v10
+## Alterações da v11
 
-No perfil **Padrão Nacional — Emissor Nacional** (Rio de Janeiro), foi incluída a pergunta:
+No perfil **Padrão Nacional — Emissor Nacional** (Rio de Janeiro), o **NBS permanece no fluxo independentemente da escolha sobre o destaque das tags da Reforma Tributária (IBS/CBS)**.
 
-**Haverá destaque das tags da Reforma Tributária (IBS/CBS)?**
-
-- **Sim**: mantém o fluxo completo já existente, com NBS, CST/cClassTrib, cIndOp e indDest.
-- **Não**: oculta os campos vinculados ao IBS/CBS, não exige NBS/CST/cClassTrib/cIndOp/indDest e não gera o grupo `<IBSCBS>` no XML de apoio.
-- Enquanto o usuário não escolher Sim ou Não, o assistente informa que essa definição ainda está pendente.
+- **Destaque IBS/CBS = Sim**: mantém NBS e exibe também CST/cClassTrib, cIndOp e indDest, gerando o grupo `<IBSCBS>` no XML de apoio.
+- **Destaque IBS/CBS = Não**: mantém o NBS visível, validado, exibido na ficha final e gerado em `<cNBS>`, mas oculta CST/cClassTrib, cIndOp e indDest e não gera o grupo `<IBSCBS>`.
+- Alternar entre Sim e Não preserva o NBS já informado; somente os campos exclusivos da Reforma Tributária são limpos/ocultados.
+- O NBS continua sendo validado contra a tabela nacional carregada no perfil do Rio.
 
 A pesquisa do Rio por **cTribNac de 6 dígitos** continua disponível. Exemplo: `140501`.
 
-O perfil **Padrão Nacional — Provedor ISSNet / Duque de Caxias** foi mantido com o comportamento anterior, sem essa pergunta e sem flexibilização da correlação.
+O perfil **Padrão Nacional — Provedor ISSNet / Duque de Caxias** foi mantido com o comportamento anterior.
 
 ## GitHub Pages
 
