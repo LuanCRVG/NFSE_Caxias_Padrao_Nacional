@@ -1,18 +1,20 @@
-# Assistente NFS-e — Padrão Nacional + ISSNet (v9)
+# Assistente NFS-e — Padrão Nacional + ISSNet (v10)
 
 Versão pronta para publicação no GitHub Pages.
 
-## Alteração da v9
+## Alterações da v10
 
-No perfil **Padrão Nacional — Emissor Nacional** (tabela municipal atualmente carregada para o Rio de Janeiro), a pesquisa do serviço municipal foi ajustada para priorizar diretamente o **cTribNac de 6 dígitos**.
+No perfil **Padrão Nacional — Emissor Nacional** (Rio de Janeiro), foi incluída a pergunta:
 
-Exemplo:
+**Haverá destaque das tags da Reforma Tributária (IBS/CBS)?**
 
-- Digite `140501`
-- O sistema filtra as opções municipais vinculadas ao `cTribNac = 140501`
-- A lista continua exibindo o código completo, o `cTribMun`, o código municipal do Rio e a descrição
+- **Sim**: mantém o fluxo completo já existente, com NBS, CST/cClassTrib, cIndOp e indDest.
+- **Não**: oculta os campos vinculados ao IBS/CBS, não exige NBS/CST/cClassTrib/cIndOp/indDest e não gera o grupo `<IBSCBS>` no XML de apoio.
+- Enquanto o usuário não escolher Sim ou Não, o assistente informa que essa definição ainda está pendente.
 
-A pesquisa por descrição e pelos demais códigos continua disponível. A alteração é aplicada somente ao perfil do Emissor Nacional/Rio; o comportamento do perfil **Padrão Nacional — Provedor ISSNet** permanece inalterado.
+A pesquisa do Rio por **cTribNac de 6 dígitos** continua disponível. Exemplo: `140501`.
+
+O perfil **Padrão Nacional — Provedor ISSNet / Duque de Caxias** foi mantido com o comportamento anterior, sem essa pergunta e sem flexibilização da correlação.
 
 ## GitHub Pages
 
