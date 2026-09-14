@@ -96,9 +96,9 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
   </article>
 
   <article class="card">
-    <div class="step"><b>2</b><div><h2>Serviço municipal</h2><p>Pesquise pelo código municipal, código nacional ou descrição do serviço.</p></div></div>
+    <div class="step"><b>2</b><div><h2>Serviço municipal</h2><p id="servHint">Pesquise pelo código municipal, código nacional ou descrição do serviço.</p></div></div>
     <label>Pesquisar
-      <input id="servSearch" type="search" placeholder="Ex.: 1401, 140101, 14.01.01.024, manutenção...">
+      <input id="servSearch" type="search" placeholder="Ex.: 1401, 140101, manutenção...">
     </label>
     <label>Código / serviço municipal
       <select id="servMun"><option value="">Selecione...</option></select>
@@ -243,7 +243,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
 
   const E = {
     municipio:$('municipio'), modoInfo:$('modoInfo'),
-    servSearch:$('servSearch'), servMun:$('servMun'), munInfo:$('munInfo'),
+    servSearch:$('servSearch'), servHint:$('servHint'), servMun:$('servMun'), munInfo:$('munInfo'),
     tribNacWrap:$('tribNacWrap'), tribNac:$('tribNac'),
     nbs:$('nbs'), validarNbs:$('validarNbs'), verNbs:$('verNbs'),
     nbsStatus:$('nbsStatus'), nbsInfo:$('nbsInfo'), nbsPermitidos:$('nbsPermitidos'), nbsListSearch:$('nbsListSearch'), nbsPermitidosLista:$('nbsPermitidosLista'),
@@ -336,10 +336,20 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
   }
 
   function serviceMatches(row,q){
-    const nq=norm(q);
+    const raw=String(q||'').trim();
+    const nq=norm(raw);
     if(!nq) return true;
 
     if(isRio()){
+      // No Rio, quando o usuário digita somente números (até 6 dígitos),
+      // a pesquisa prioriza diretamente o cTribNac. Ex.: 140501.
+      // Isso permite encontrar todas as opções municipais 14.05.01.xxx
+      // que compartilham o mesmo cTribNac.
+      if(/^\d{1,6}$/.test(raw)){
+        return String(row.cTribNac||'').startsWith(raw);
+      }
+
+      // Mantém as pesquisas por código completo, código municipal e descrição.
       return [
         row.fullCode,row.cTribNac,row.cTribMun,row.codServicoMunicipal,row.descricao
       ].some(v=>norm(v).includes(nq));
@@ -401,6 +411,15 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
     E.munInfo.classList.add('hidden');
     E.tribNacWrap.classList.add('hidden');
     E.tribNac.innerHTML='';
+
+    if(isRio()){
+      E.servHint.textContent='Digite o cTribNac diretamente com 6 dígitos (ex.: 140501). Também é possível pesquisar pela descrição.';
+      E.servSearch.placeholder='Ex.: 140501';
+    }else{
+      E.servHint.textContent='Pesquise pelo código municipal, código nacional ou descrição do serviço.';
+      E.servSearch.placeholder='Ex.: 1401, 140101, manutenção...';
+    }
+
     resetDownstream();
     renderModeInfo();
     renderServices();
@@ -961,9 +980,7 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
     downloadText('parametrizacao_nfse.xml',xmlBlock(),'application/xml;charset=utf-8');
   });
 
-  renderModeInfo();
-  renderServices();
-  update();
+  onMunicipio();
 })();
 </script>
 </body>

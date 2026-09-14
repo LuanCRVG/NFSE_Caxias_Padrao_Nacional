@@ -1,16 +1,19 @@
-# Assistente NFS-e — Padrão Nacional + ISSNet (v8)
+# Assistente NFS-e — Padrão Nacional + ISSNet (v9)
 
-Esta versão remove a ideia de que a regra pertence ao "Rio de Janeiro" e passa a trabalhar por MODELO DE INTEGRAÇÃO:
+Versão pronta para publicação no GitHub Pages.
 
-- Padrão Nacional — Emissor Nacional
-- Padrão Nacional — Provedor ISSNet
+## Alteração da v9
 
-A lógica continua a mesma da v7:
-- No Emissor Nacional, NBS/CST/cClassTrib/cIndOp não ficam bloqueados pela correlação orientativa.
-- No ISSNet, permanece a validação mais amarrada pela correlação do provedor.
-- O município passa a ser um cadastro/configuração separado da regra de integração.
-- Para adicionar outro município ao Emissor Nacional, basta cadastrar/importar sua tabela municipal correspondente.
-- XML de apoio continua disponível.
+No perfil **Padrão Nacional — Emissor Nacional** (tabela municipal atualmente carregada para o Rio de Janeiro), a pesquisa do serviço municipal foi ajustada para priorizar diretamente o **cTribNac de 6 dígitos**.
 
-Observação:
-A tabela municipal atualmente incorporada no perfil Emissor Nacional é a planilha que foi fornecida para o Município do Rio de Janeiro. O nome da REGRA deixou de ser "Rio"; o município permanece como dado cadastral da tabela utilizada.
+Exemplo:
+
+- Digite `140501`
+- O sistema filtra as opções municipais vinculadas ao `cTribNac = 140501`
+- A lista continua exibindo o código completo, o `cTribMun`, o código municipal do Rio e a descrição
+
+A pesquisa por descrição e pelos demais códigos continua disponível. A alteração é aplicada somente ao perfil do Emissor Nacional/Rio; o comportamento do perfil **Padrão Nacional — Provedor ISSNet** permanece inalterado.
+
+## GitHub Pages
+
+Envie o arquivo `index.html` para a raiz do repositório e habilite o GitHub Pages para publicar a página.
