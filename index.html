@@ -151,14 +151,17 @@ footer{background:#fff;border-top:1px solid var(--line);padding:22px 0;color:#7a
 
   <article id="indOpCard" class="card">
     <div class="step"><b>5</b><div><h2>Indicador da operação (cIndOp)</h2><p>O site mostra apenas os cIndOp permitidos para o cTribNac + NBS + CST + cClassTrib escolhidos.</p></div></div>
-    <label>Onde / como ocorreu o fornecimento
+    <div class="mode-note"><strong>O que este campo significa:</strong> o <strong>cIndOp não informa o município onde o serviço foi realizado</strong>. Ele define, para fins de <strong>IBS/CBS</strong>, qual regra de localização da operação deve ser usada — por exemplo, endereço do destinatário, estabelecimento do fornecedor ou outro critério previsto para aquela operação.</div>
+    <label>Regra de localização da operação para IBS/CBS
       <select id="indOp" disabled><option value="">Aguardando classificação...</option></select>
     </label>
+    <small>Exemplo: se aparecer “Endereço do destinatário”, isso significa que, para IBS/CBS, a operação será localizada pelo endereço do destinatário. Isso não substitui o campo “Município da prestação” abaixo.</small>
     <div id="indInfo" class="box hidden"></div>
   </article>
 
   <article class="card">
     <div class="step"><b id="locStepNum">6</b><div><h2>Município da prestação</h2><p>Informe onde o serviço foi efetivamente realizado.</p></div></div>
+    <div class="mode-note"><strong>Não confundir com o cIndOp:</strong> aqui você informa o <strong>município em que o serviço foi efetivamente prestado</strong> (campo <code>cLocPrestacao</code> da DPS). Este campo é independente da regra de localização do IBS/CBS. Mesmo que o cIndOp indique “Endereço do destinatário”, por exemplo, o município da prestação continua sendo informado separadamente.</div>
     <label class="check">
       <input id="mesmoMunicipio" type="checkbox" checked>
       <span id="mesmoMunicipioLabel">Serviço realizado no mesmo município da emissão</span>

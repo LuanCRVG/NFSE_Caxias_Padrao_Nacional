@@ -1,19 +1,24 @@
-# Assistente NFS-e — Padrão Nacional + ISSNet (v11)
+# Assistente NFS-e — Padrão Nacional + ISSNet (v12)
 
 Versão pronta para publicação no GitHub Pages.
 
-## Alterações da v11
+## Alterações da v12
 
-No perfil **Padrão Nacional — Emissor Nacional** (Rio de Janeiro), o **NBS permanece no fluxo independentemente da escolha sobre o destaque das tags da Reforma Tributária (IBS/CBS)**.
+Foi reforçada a explicação visual para evitar confusão entre **cIndOp** e **Município da prestação**:
 
-- **Destaque IBS/CBS = Sim**: mantém NBS e exibe também CST/cClassTrib, cIndOp e indDest, gerando o grupo `<IBSCBS>` no XML de apoio.
-- **Destaque IBS/CBS = Não**: mantém o NBS visível, validado, exibido na ficha final e gerado em `<cNBS>`, mas oculta CST/cClassTrib, cIndOp e indDest e não gera o grupo `<IBSCBS>`.
-- Alternar entre Sim e Não preserva o NBS já informado; somente os campos exclusivos da Reforma Tributária são limpos/ocultados.
-- O NBS continua sendo validado contra a tabela nacional carregada no perfil do Rio.
+- **cIndOp**: agora o site explica claramente que o campo representa a **regra de localização da operação para fins de IBS/CBS**. Ele não informa, por si só, o município onde o serviço aconteceu.
+- O rótulo do seletor foi alterado para **“Regra de localização da operação para IBS/CBS”**.
+- Foi incluído um exemplo explicando que opções como **“Endereço do destinatário”** são critérios fiscais do IBS/CBS e não substituem o município da prestação.
+- **Município da prestação**: agora o site explica que esse campo informa onde o serviço foi efetivamente realizado e corresponde ao `cLocPrestacao` da DPS.
+- O site destaca que os dois campos são independentes e podem apontar para conceitos diferentes.
 
-A pesquisa do Rio por **cTribNac de 6 dígitos** continua disponível. Exemplo: `140501`.
+As regras da v11 foram preservadas:
 
-O perfil **Padrão Nacional — Provedor ISSNet / Duque de Caxias** foi mantido com o comportamento anterior.
+- No Rio, o **NBS permanece no fluxo** mesmo quando o destaque IBS/CBS estiver marcado como “Não”.
+- Com **IBS/CBS = Sim**, aparecem CST/cClassTrib, cIndOp e indDest.
+- Com **IBS/CBS = Não**, apenas os campos exclusivos da Reforma são ocultados; o NBS continua sendo utilizado.
+- A pesquisa do Rio por **cTribNac de 6 dígitos**, como `140501`, continua disponível.
+- O perfil **ISSNet / Duque de Caxias** mantém o comportamento anterior.
 
 ## GitHub Pages
 
